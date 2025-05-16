@@ -1,0 +1,31 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import time
+from bs4 import BeautifulSoup
+
+# راه‌اندازی درایور
+driver = webdriver.Chrome()
+
+# رفتن به صفحه DuckDuckGo
+driver.get("https://duckduckgo.com/")
+time.sleep(2)
+
+# پیدا کردن فیلد جستجو و نوشتن متن
+search_box = driver.find_element(By.ID, 'search_form_input_homepage')
+search_box.send_keys('آموزش پایتون مکتب خونه')
+search_box.send_keys(Keys.ENTER)
+time.sleep(2)
+
+# استخراج HTML صفحه و پردازش با BS4
+soup = BeautifulSoup(driver.page_source, 'html.parser')
+results = soup.find_all('a', class_='result__a')
+
+# چاپ نتایج
+for i, result in enumerate(results[:10], 1):
+    print(f"{i}. {result.text.strip()}")
+    print(result['href'])
+    print("-" * 40)
+
+# بستن درایور
+driver.quit()
